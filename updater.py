@@ -4,21 +4,27 @@ import os
 import win32api
 
 def check_and_run_updater(fname):
-    # current_version = getFileProperties(fname=fname)["FileVersion"]
+    current_version = getFileProperties(fname=fname)["FileVersion"]
     latest_version = get_latest_version_from_github()
 
-    # print(current_version)
+    print("Current Version: ", current_version)
     print()
-    print(latest_version)
+    print("Latest Version: ", latest_version)
 
     # if version.parse(latest_version) > version.parse(current_version):
     #     print("New Version")
 
 
-def getFileProperties(fname):
+def getFileProperties(fname: str) -> dict:
+    """ Read all properties of the given file return them as a dictionary.
+
+    Args:
+        fname (str): filename of executable to read properties of
+
+    Returns:
+        dict: properties of executable file
     """
-    Read all properties of the given file return them as a dictionary.
-    """
+
     propNames = ('Comments', 'InternalName', 'ProductName',
         'CompanyName', 'LegalCopyright', 'ProductVersion',
         'FileDescription', 'LegalTrademarks', 'PrivateBuild',
@@ -55,12 +61,13 @@ def getFileProperties(fname):
     except:
         pass
 
-def get_latest_version_from_github():
+def get_latest_version_from_github() -> dict:
 
     url = "https://api.github.com/repos/mpetty9991/mgr_creator/releases/latest"   
     response = requests.get(url)
     response = response.json()
     latest_version = response
+    
     return latest_version
     
 def get_version_from_file():
@@ -74,4 +81,5 @@ def get_version_from_file():
 
     return current_version
 
-check_and_run_updater(r"gui.exe")
+if __name__ == "__main__":
+    check_and_run_updater(r"C:\dev\mgr_creator\dist\gui\gui.exe")
