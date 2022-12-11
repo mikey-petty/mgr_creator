@@ -2,20 +2,48 @@ import requests
 from packaging import version
 import os
 import win32api
+import shutil
+import subprocess
 
 def check_and_run_updater(fname):
-    current_version = getFileProperties(fname=fname)["FileVersion"]
-    latest_version = get_latest_version_from_github()
+    
+    # get the version details of latest release
+    latest_version_info = get_latest_version_info_from_github()
 
-    print("Current Version: ", current_version)
-    print()
-    print("Latest Version: ", latest_version)
+    # read the current release
+    current_version = get_file_properties(fname=fname)["FileVersion"]
+    latest_version = latest_version_info["tag_name"]
 
-    # if version.parse(latest_version) > version.parse(current_version):
-    #     print("New Version")
+    if version.parse(latest_version) > version.parse(current_version):
+        get_latest_installer(latest_version_info)
+        run_latest_installer()
 
 
-def getFileProperties(fname: str) -> dict:
+def run_latest_installer():
+    subprocess.run("test.exe")
+    return
+
+def get_latest_installer(version_info: dict):
+    """ Downloads and saves the latest installer
+
+    Args:
+        version_info (dict): version info of the latest release
+    """
+    download_url = version_info["assets"][0]["browser_download_url"]
+
+    header = {"accept": "application/octet-stream"}
+
+    response = requests.get(url=download_url, headers=header)
+
+    with requests.get(download_url, stream=True) as r:
+        with open("test.exe", 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+
+    del response
+
+    return
+
+def get_file_properties(fname: str) -> dict:
     """ Read all properties of the given file return them as a dictionary.
 
     Args:
@@ -61,25 +89,27 @@ def getFileProperties(fname: str) -> dict:
     except:
         pass
 
-def get_latest_version_from_github() -> dict:
+def get_latest_version_info_from_github() -> dict:
+    """ Send API request to get the latest installer for application
 
-    url = "https://api.github.com/repos/mpetty9991/mgr_creator/releases/latest"   
-    response = requests.get(url)
-    response = response.json()
-    latest_version = response
+    Returns:
+        str: Returns latest version of the application as a string
+    """
     
-    return latest_version
+    # get request for latest release
+    headers = {"accept": "application/vnd.github+jso"}
+    url = "https://api.github.com/repos/mpetty9991/mgr_creator/releases/latest"
+    response = requests.get(url=url, headers=headers)
     
-def get_version_from_file():
-    version_file = os.path.join('version.txt')
+    # return None if response is invalid
+    if response.status_code != 200: return None
 
-    if os.path.isfile(version_file):
-        with open(version_file, 'r') as f:
-            current_version = f.read().strip(' \n\r')
-    else:
-        current_version = None
+    return response.json()
 
-    return current_version
 
+# Developer testing
 if __name__ == "__main__":
     check_and_run_updater(r"C:\dev\mgr_creator\dist\gui\gui.exe")
+
+else: 
+    check_and_run_updater(r"gui.exe")
