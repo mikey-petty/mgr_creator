@@ -1,6 +1,5 @@
 import requests
 from packaging import version
-import os
 import win32api
 import shutil
 import subprocess
@@ -20,8 +19,11 @@ def check_and_run_updater(fname):
 
 
 def run_latest_installer():
-    subprocess.run("test.exe")
-    return
+    try: 
+        subprocess.run(args=["installer.exe", "/SILENT"])
+    except: 
+        print("Error running installer")
+        return
 
 def get_latest_installer(version_info: dict):
     """ Downloads and saves the latest installer
@@ -36,7 +38,7 @@ def get_latest_installer(version_info: dict):
     response = requests.get(url=download_url, headers=header)
 
     with requests.get(download_url, stream=True) as r:
-        with open("test.exe", 'wb') as f:
+        with open("installer.exe", 'wb') as f:
             shutil.copyfileobj(r.raw, f)
 
     del response

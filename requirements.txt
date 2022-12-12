@@ -1,3 +1,5 @@
-customtkinter==5.0.2
-numpy==1.23.4
-pandas==1.5.2
+darkdetect==0.7.1
+packaging==22.0
+pywin32==305
+requests==2.28.1
+typing_extensions==4.4.0

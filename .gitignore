@@ -131,3 +131,6 @@ dmypy.json
 batch
 
 metadata.yml
+test*
+inno_setup.iss
+Output
