@@ -419,8 +419,6 @@ def get_crs(crs: str) -> str:
     if "pe." in crs: return "Phys Ed."
     if "sel" in crs: return "SEL"
 
-
-
     if "physedhealth" in crs: 
         return "Phys_Ed."
 
@@ -429,16 +427,10 @@ def get_crs(crs: str) -> str:
 
 
 if __name__ == "__main__":
-    out = r'out'
-    g_dir = r"test_files/grades"
-    hr_dir = r"test_files/homerooms"
-      
-
 
     tbl = GradeTables(        
-        grades_path="test_files/grades/HES.csv", 
-        homeroom_path="test_files/homerooms/HES.csv",
-        courses_path=constants.COURSES_PATH, 
-        output_path=constants.OUTPUT_PATH)
+        grades_path=r"C:\Users\12054\Downloads\grades.csv", 
+        homeroom_path=r"C:\Users\12054\Downloads\homerooms.csv",
+        output_path=r"C:\Users\12054\Downloads")
 
     
