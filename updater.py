@@ -3,20 +3,18 @@ from packaging import version
 import win32api
 import shutil
 import subprocess
+import tempfile
+import os
 
-def check_and_run_updater(fname):
+def check_and_run_updater(fname) -> str:
     
     # get the version details of latest release
     latest_version_info = get_latest_version_info_from_github()
     current_version_info = get_file_properties(fname=fname)
 
-    print("File: ", fname)
-
     if latest_version_info == None: 
-        print("Latest version DNE")
         return
     elif current_version_info == None: 
-        print("Current DNE")
         return
 
     # read the current release
@@ -27,15 +25,14 @@ def check_and_run_updater(fname):
         print("Unable to get current or latest version")
         return
 
-    print("Current: ", current_version)
-    print("Latest: ", latest_version)
 
-    if version.parse(latest_version) != version.parse(current_version):
-        
+    if version.parse(latest_version) > version.parse(current_version):
 
-        get_latest_installer(latest_version_info)
+        updater_path = get_latest_installer(latest_version_info)
         print("Downloaded Latest Installer")
-        run_latest_installer()
+        return updater_path
+    
+    return None
 
 
 def run_latest_installer():
@@ -51,6 +48,9 @@ def get_latest_installer(version_info: dict):
     Args:
         version_info (dict): version info of the latest release
     """
+    temp_dir = tempfile.gettempdir()
+    installer_path = os.path.join(temp_dir, "Installer.exe")
+
     download_url = version_info["assets"][0]["browser_download_url"]
 
     header = {"accept": "application/octet-stream"}
@@ -58,12 +58,12 @@ def get_latest_installer(version_info: dict):
     response = requests.get(url=download_url, headers=header)
 
     with requests.get(download_url, stream=True) as r:
-        with open("installer.exe", 'wb') as f:
+        with open(installer_path, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
 
     del response
 
-    return
+    return installer_path
 
 def get_file_properties(fname: str) -> dict:
     """ Read all properties of the given file return them as a dictionary.
@@ -128,10 +128,3 @@ def get_latest_version_info_from_github() -> dict:
 
     return response.json()
 
-
-# Developer testing
-if __name__ == "__main__":
-    check_and_run_updater(r"gui.exe")
-
-else: 
-    check_and_run_updater(r"gui.exe")

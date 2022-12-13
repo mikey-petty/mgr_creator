@@ -1,14 +1,20 @@
 import subprocess
+import os
+import sys
+import updater
 
 def main():
 
-    print("Running Updater")
+    installer_path = updater.check_and_run_updater("gui.exe")
 
-    subprocess.run("updater.exe")
+    if installer_path == None:
+        subprocess.run("gui.exe")
 
-    print("Now Running MGR")
+    else: 
+        subprocess.Popen([installer_path, "/SILENT"])
+        sys.exit(0)
 
-    subprocess.run("gui.exe")
+
 
 if __name__ == "__main__":
     main()

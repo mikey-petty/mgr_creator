@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import constants
 from utility import *
 
 # remove header styles from pd.to_excel
