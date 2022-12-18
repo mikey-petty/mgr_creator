@@ -1,9 +1,6 @@
 import pandas as pd
 import os
-import constants
 from utility import *
-from pprint import *
-import numpy as np
 
 # remove header styles from pd.to_excel
 from pandas.io.formats.excel import ExcelFormatter
@@ -258,7 +255,6 @@ class GradeTables():
             for column in dupes:
                 temp_df = sheet_df.loc[:, [column, "Student"]]
                 sheet_df[column] = (temp_df.iloc[:, [0,2]].fillna(0) + temp_df.iloc[:, [1,2]].fillna(0))[column]
-                # print(temp_df)
                 
             
             sheet_df = sheet_df.loc[:,~sheet_df.columns.duplicated()].copy()
@@ -422,8 +418,6 @@ def get_crs(crs: str) -> str:
     if "pe." in crs: return "Phys Ed."
     if "sel" in crs: return "SEL"
 
-
-
     if "physedhealth" in crs: 
         return "Phys_Ed."
 
@@ -432,23 +426,10 @@ def get_crs(crs: str) -> str:
 
 
 if __name__ == "__main__":
-    out = r'out'
-    g_dir = r"test_files/grades"
-    hr_dir = r"test_files/homerooms"
-
-    # for f_grade, f_hr in zip(os.listdir(g_dir), os.listdir(hr_dir)):
-    #     print(f_grade, " ", f_hr)
-    #     GradeTables(        
-    #         grades_path=os.path.join(g_dir, f_grade), 
-    #         homeroom_path=os.path.join(hr_dir, f_hr),
-    #         output_path=out)
-            
-
 
     tbl = GradeTables(        
-        grades_path="test_files/grades/HES.csv", 
-        homeroom_path="test_files/homerooms/HES.csv",
-        courses_path=constants.COURSES_PATH, 
-        output_path=constants.OUTPUT_PATH)
+        grades_path=r"C:\Users\12054\Downloads\grades.csv", 
+        homeroom_path=r"C:\Users\12054\Downloads\homerooms.csv",
+        output_path=r"C:\Users\12054\Downloads")
 
     

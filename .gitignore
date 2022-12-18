@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+batch
+
+metadata.yml
+test*
+inno_setup.iss
+Output
+build.bat
+file_version_info.txt
+asset_script.py
+spec
