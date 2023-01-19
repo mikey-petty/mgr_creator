@@ -37,7 +37,9 @@ class GradeTables():
         self.homerooms_df = self._store_df_from_file(fpath=homeroom_path)
 
         # store term and campus name, for output file naming if possible
-        try: self.term = self.grades_df.loc[self.grades_df["GR Term"].str.contains("T"), "GR Term"].iloc[0]
+        try: 
+            self.term = "T" + self.grades_df.loc[self.grades_df["GR Term"].str.contains("T"), "GR Term"].str.split(pat="T").max()[1]
+
         except: self.term = ""
         try: self.campus = self.homerooms_df.loc[0,"School"]
         except: self.campus = ""
@@ -83,7 +85,7 @@ class GradeTables():
     def _clean_grades_df(self):
         try: self.grades_df = self.grades_df.loc[self.grades_df["Enrollment"]=="active", :]
         except: print("No Enrollment data")
-        try: self.grades_df = self.grades_df.loc[self.grades_df["GR Term"]=="T1", :]
+        try: self.grades_df = self.grades_df.loc[self.grades_df["GR Term"]==self.term, :]
         except: print("No Term Data")
 
         self.grades_df = self.grades_df.loc[:, ["Crs Name", "Crs Num", "Grade", "Student Number", "Student", "Pct",]]
@@ -132,7 +134,6 @@ class GradeTables():
     def _write_mgr_to_file(self):
     
         # set ouput file name
-        # fname = create_filename_intelligently(constants.OUTPUT_PATH, self.campus, self.term)
         sheet_names = self._determine_sheet_names(x[0] for x in self.sheets_list)
 
         fname = create_filename_intelligently(self.output_path, self.campus, self.term) 
@@ -428,8 +429,8 @@ def get_crs(crs: str) -> str:
 if __name__ == "__main__":
 
     tbl = GradeTables(        
-        grades_path=r"C:\Users\12054\Downloads\grades.csv", 
-        homeroom_path=r"C:\Users\12054\Downloads\homerooms.csv",
-        output_path=r"C:\Users\12054\Downloads")
+        grades_path=r"C:\Users\12054\Downloads\export.csv", 
+        homeroom_path=r"C:\Users\12054\Downloads\export (1).csv",
+        output_path=r"C:\Users\12054\Downloads\MGR")
 
     
