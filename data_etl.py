@@ -255,8 +255,9 @@ class GradeTables():
             
             for column in dupes:
                 temp_df = sheet_df.loc[:, [column, "Student"]]
-                sheet_df[column] = (temp_df.iloc[:, [0,2]].fillna(0) + temp_df.iloc[:, [1,2]].fillna(0))[column]
-                
+                print(column)
+                try: sheet_df[column] = (temp_df.iloc[:, [0,2]].fillna(0) + temp_df.iloc[:, [1,2]].fillna(0))[column]
+                except: print("Error")
             
             sheet_df = sheet_df.loc[:,~sheet_df.columns.duplicated()].copy()
 
@@ -431,6 +432,6 @@ if __name__ == "__main__":
     tbl = GradeTables(        
         grades_path=r"C:\Users\12054\Downloads\export.csv", 
         homeroom_path=r"C:\Users\12054\Downloads\export (1).csv",
-        output_path=r"C:\Users\12054\Downloads\MGR")
+        output_path=r"C:\Users\12054\Downloads")
 
     
